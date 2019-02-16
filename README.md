@@ -14,7 +14,7 @@
 >
 > 同时作者还提供了一个由Mathematic编写的简单的绘图程序，可以用来及时的展示计算得到的结果（visual.nb）
 
-![Image text](Pictures\Mathematica_6N0HcvNprH.jpg)
+![Image text](https://github.com/yxli8023/BdG/blob/master/Pictures/Mathematica_6N0HcvNprH.jpg)
 
 ## 参数设置
 
@@ -25,7 +25,7 @@
 * T: 系统温度
 * eps: 自恰精度
 
-![Image text](Pictures\sublime_text_M0uKPPBlOy.jpg)
+![Image text](https://github.com/yxli8023/BdG/blob/master/Pictures/sublime_text_M0uKPPBlOy.jpg)
 
 # 函数介绍
 
@@ -105,9 +105,9 @@ Majorana零能模之一
 
 # 结果展示
 
-![Image text](Pictures\del.jpg)
+![Image text](https://github.com/yxli8023/BdG/blob/master/Pictures/del.jpg)
 
-![Image text](Pictures\energy.jpg)
+![Image text](https://github.com/yxli8023/BdG/blob/master/Pictures/energy.jpg)
 
 
 
@@ -133,13 +133,13 @@ windows平台下利用Visual Studio 2017 + intel visual fortran 2019 进行编�
 
 1.先在VS中打开项目，并右键单击如图所示位置
 
-![](Pictures\devenv_Afw3Vxj1VI.jpg) 
+![](https://github.com/yxli8023/BdG/blob/master/Pictures/devenv_Afw3Vxj1VI.jpg) 
 
 点击属性选项，进入下面的界面，相应的设置如图所示
 
-![](Pictures\devenv_72vHIPRTBw.jpg)
+![](https://github.com/yxli8023/BdG/blob/master/Pictures/devenv_72vHIPRTBw.jpg)
 
-![devenv_tDihBL2BXM](Pictures\devenv_tDihBL2BXM.jpg)
+![devenv_tDihBL2BXM](https://github.com/yxli8023/BdG/blob/master/Pictures/devenv_tDihBL2BXM.jpg)
 
 # 物理内容
 
