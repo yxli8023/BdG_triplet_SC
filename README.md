@@ -14,7 +14,7 @@
 >
 > 同时作者还提供了一个由Mathematic编写的简单的绘图程序，可以用来及时的展示计算得到的结果（visual.nb）
 
-![](D:\Git_Repostory\BdG\Pictures\Mathematica_6N0HcvNprH.jpg)
+![Image text](Pictures\Mathematica_6N0HcvNprH.jpg)
 
 ## 参数设置
 
@@ -25,7 +25,7 @@
 * T: 系统温度
 * eps: 自恰精度
 
-![](Pictures\sublime_text_M0uKPPBlOy.jpg)
+![Image text](Pictures\sublime_text_M0uKPPBlOy.jpg)
 
 # 函数介绍
 
@@ -105,9 +105,9 @@ Majorana零能模之一
 
 # 结果展示
 
-![](Pictures\del.jpg)
+![Image text](Pictures\del.jpg)
 
-![energy](Pictures\energy.jpg)
+![Image text](Pictures\energy.jpg)
 
 
 
