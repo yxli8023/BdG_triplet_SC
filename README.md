@@ -147,6 +147,10 @@
 
 ![devenv_tDihBL2BXM](https://github.com/yxli8023/BdG/blob/master/Pictures/devenv_tDihBL2BXM.jpg)
 
+### [补充内容(VS+IVF安装)]()
+
+
+
 # 物理内容
 
 > 在本篇论文中，哈密顿量是厄密，对应着[厄密矩阵](https://www.wikiwand.com/en/Hermitian_matrix)，其本征值是实数。
