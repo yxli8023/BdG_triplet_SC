@@ -15,8 +15,12 @@
 > 同时作者还提供了一个由Mathematic编写的简单的绘图程序，可以用来及时的展示计算得到的结果（visual.nb）
 >
 > 在运行Visual.nb文件时，只需将该文件和数据结果放在同一个文件夹之中即可
+>
+> final_version中同时有origin的绘图文件pic，用来比较清晰的展示计算结果
 
 ![Image text](https://github.com/yxli8023/BdG/blob/master/Pictures/Mathematica_6N0HcvNprH.jpg)
+
+![](https://github.com/yxli8023/BdG/blob/master/Pictures/Origin93_64_hWVZ1U68Dp.png)
 
 ## 参数设置
 
