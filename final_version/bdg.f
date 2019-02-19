@@ -87,10 +87,11 @@
 !================eig-value and eig-vector solve ==========
       !call matrix_verify()   ! 检验矩阵是否为厄米矩阵
       call eig()
+      call Majorana()
 !==================self-consistently==================
 
       !call loop1(10)
-      call loop2()
+      call loop()
       !call Majorana() 
       
 !--------------------------- open file------------------------
@@ -441,18 +442,6 @@
       integer m,l,i
       integer num     
       complex,external::delta
-      character*20::str1,str2,str3,str4
-      character*20::str5,str6
-      character*20::str7,str8
-      str1 = "order_module"
-      str5 = "order"
-      str7 = "energy_rf"
-      write(str2,"(I4.4)")num ! Change type of 'num' to character from integer
-      str3 = ".dat"
-      str4 = trim(str1)//trim(str2)//trim(str3)
-      str6 = trim(str5)//trim(str2)//trim(str3)
-      str8 = trim(str7)//trim(str2)//trim(str3)
-      !open(12,file=str6)! 12 文件用来输出delta,需要另外的文件来输出delta的模
       open(12,file="order.dat")
       do m = 1,xn
             do l = 1,yn
@@ -472,7 +461,7 @@
                   end do
             end do
             close(14)
-            !open(13,file=str8)
+
             open(13,file="energy.dat")
             do m = 1,N
                   write(13,*)w(m) ! eigenvalue
@@ -493,55 +482,8 @@
       call pair_Init(1) 
       call potential(xp,yp)
       end subroutine matrix
-!===============================================================
-      subroutine loop1(times)   
-      use param
-      integer times ! The loop count number
-      integer num,ref
-      !store value of del and use for self-consistently
-      complex del_loop(xn,yn),del_err(xn,yn)
-      del_loop = 0
-      del_err = 0
-      call del_c(0) ! 计算出一组delta
-      num = 0    
-      ref = 3   
-      !open(22,file="real.dat")
-      !open(23,file="imag.dat")
-      open(24,file="count.dat")                 
-      do while(ref .gt. 1)
-            if (num .gt. times)then
-                  exit
-            end if
-!每一次都会计算出新的delta和err,所以需要对ref进行归零操作
-            ref = 0
-      !do while(minval(abs(del_err))>eps)
-            do m=1,xn
-            do l=1,yn
-                  !del_err用来存储两次计算得到的delta的差值,用来进行自恰条件的比较
-                  del_err(m,l)=del(m,l)-del_loop(m,l)
-                  del_loop(m,l) = del(m,l)
-                  !write(22,*)real(del_err)
-                  !write(23,*)imag(del_err)
-                  write(24,*)num
-                  if (real(del_err(m,l))>eps) ref=ref+1
-                  if (imag(del_err(m,l))>eps) ref=ref+1
-            end do
-            end do
-            close(22)
-            num = num + 1
-            call matrix()  ! Reconstruction Matrix
-            call eig()
-            call del_c(num) ! Get a new value for del use new w and Ham
-      !end do
-      end do
-      close(22)
-      close(23)
-      close(24)
-      return
-      end subroutine
-
 !===========================================================================
-      subroutine loop2()   
+      subroutine loop()   
       use param
       integer num,ref
       !store value of del and use for self-consistently
@@ -583,6 +525,7 @@
             num = num + 1
             call matrix()  ! Reconstruction Matrix
             call eig()
+            call Majorana()
             call del_c(num) ! Get a new value for del use new w and Ham
       !end do
       end do
@@ -590,7 +533,6 @@
       close(25)
       return
       end subroutine
-
 !===========================================================
       subroutine eig()
       use param
@@ -624,8 +566,8 @@
       open(11,file="gamma1.dat")
       open(12,file="gamma2.dat")
       do m = 1,xn*yn
-        z1(m)=(Ham(ZeroPoint,m)+Ham(ZeroPoint+1,len2+m))/sqrt(2.0)
-        z2(m)=image*(Ham(ZeroPoint,m)-Ham(ZeroPoint+1,len2+m))/sqrt(2.0)  
+        z1(m)=(Ham(m,ZeroPoint)+Ham(m,ZeroPoint+1))/sqrt(2.0)
+        z2(m)=image*(Ham(m,ZeroPoint)-Ham(m,ZeroPoint+1))/sqrt(2.0)  
         write(11,*)abs(z1(m))
         write(12,*)abs(z2(m)) 
       end do 
@@ -633,50 +575,3 @@
       close(12)
       return
       end subroutine Majorana
-!===========================================================
-      subroutine matrix_verify()
-      use param
-      integer i,j
-      integer ccc
-      ccc = 0
-      open(16,file = 'MatrixVerify.dat')
-      do i = 1,N
-            do j = 1,N
-                  if (Ham(i,j) .ne. conjg(Ham(j,i)))then
-                        ccc = ccc +1
-                        write(*,*)"Your matrix is not Hermitian"
-                        write(16,*)i,j
-                        write(16,*)Ham(i,j)
-                        !write(16,*)Ham(j,i)
-!                        write(16,*)j,i
-!                        write(16,*)Ham(i,j)
-                        write(16,*)"==================================="
-                        !stop
-                  end if
-            end do
-      end do
-      write(16,*)ccc
-      end subroutine matrix_verify
-!--------------------------------------------------------------------------------------------
-      subroutine count_number()
-      use param
-      integer i,j
-      integer c
-      c = 0
-      open(13,file='MatrixNumber.dat')
-      do i = 1,N
-            do j = 1,N
-                  if (abs(Ham(i,j)) .ne. 0)then
-                        c = c + 1
-                        !write(25,*)i,j
-                        !write(25,*)Ham(i,j)
-                        !write(25,*)"=========================="
-                  end if
-            end do
-      end do 
-      write(13,*)"Non-zero number is:",c
-      !close(13) 
-      return
-      end subroutine count_number
-
-      
