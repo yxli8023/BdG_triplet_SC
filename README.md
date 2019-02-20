@@ -10,7 +10,7 @@
 
 关于如何将论文中的模型一步步的转换成Fortran程序，在这里提供一份尚未完善的帮助手册，读者可以借助这份手册同时对照提供的程序，可以帮助读者更好的明白程序中每一步的含义，以及如何去重复该论文的结果，同时也可以在该程序的基础上进行进一步的数值计算。
 
-文件地址为[]()
+文件地址为[https://github.com/yxli8023/BdG/blob/master/article/Matrix%20construct.pdf](https://github.com/yxli8023/BdG/blob/master/article/Matrix%20construct.pdf)
 
 # 程序介绍
 
