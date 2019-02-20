@@ -1,6 +1,6 @@
 # BdG equation solve
 
-在超导的问题中，通常会涉及到BdG方程的求解。本代码是用来重复[Vortex pinning by the point potential in topological superconductors:A scheme for braiding Majorana bound states](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.96.184508)论文中关于Majorana费米子在拓扑超导中存在的一些问题。
+在超导的问题中，通常会涉及到BdG方程的求解。本代码是用来重复[Vortex pinning by the point potential in topological superconductors:A scheme for braiding Majorana bound states](https://github.com/yxli8023/BdG/blob/master/article/PhysRevB.96.184508.pdf)论文中关于Majorana费米子在拓扑超导中存在的一些问题。
 
 # [BdG equation](https://www.springer.com/cda/content/document/cda_downloaddocument/9783319313122-c2.pdf?SGWID=0-0-45-1576973-p179895452)
 
@@ -23,6 +23,8 @@
 ![Image text](https://github.com/yxli8023/BdG/blob/master/Pictures/Mathematica_6N0HcvNprH.jpg)
 
 ![](https://github.com/yxli8023/BdG/blob/master/Pictures/Origin93_64_hWVZ1U68Dp.png)
+
+> 原始文章在[artile](https://github.com/yxli8023/BdG/blob/master/article/PhysRevB.96.184508.pdf)中
 
 ## 参数设置
 
