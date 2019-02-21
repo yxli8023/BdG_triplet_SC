@@ -32,6 +32,10 @@
 
 > 原始文章在[artile](https://github.com/yxli8023/BdG/blob/master/article/PhysRevB.96.184508.pdf)中
 
+## 蹭热度的我
+
+最近python比较火，也比较好用，开源工具包也比较多，功能齐全，所以在final_version文件夹中，提供了一个利用python的代码来展示计算结果的，不过要注意的是，请将此代码和你的数据文件放在同一个人文件夹下面，否则运行结果可能不正确。
+
 ## 参数设置
 
 * xn: x方向格点数
