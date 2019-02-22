@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>afa5885e-955c-4cae-b219-8f0f16620a53</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>bdg_python.py</StartupFile>
+    <StartupFile>main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,23 +23,20 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="bdg_python.py" />
-    <Compile Include="Hop.py">
+    <Compile Include="main.py" />
+    <Compile Include="matRebulit.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="diagterm.py">
+    <Compile Include="check.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="pariterm.py">
+    <Compile Include="visualShow.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Self_function.py">
+    <Compile Include="subfunction.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="param.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spin_orbital.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

@@ -1,4 +1,13 @@
 from param import *
+import os
+from matRebulit import *
+
+
+# 文件路径
+current_path = os.path.abspath(__file__) # 读取当前文件的位置
+father_path = os.path.abspath(os.path.dirname(current_path) + os.path.sep + ".") # 获取当前文件的父目录
+
+
 # hopping过程中位相考虑
 def phi(y):
     return exp(-1j*pi/phi0*B*y)
@@ -18,3 +27,12 @@ def potential(x,y):
     ham[xy+len2*2,xy+len2*2] = ham[xy+len2*2,xy+len2*2] - V     # (3,3)block
     ham[xy+len2*3,xy+len2*3] = ham[xy+len2*3,xy+len2*3] - V       #(4,4)block
     return
+
+#========================== 序参量计算  ===========================
+def del_cal(eig_val,eig_vec):
+    global delta
+    # 格点位置上序参量的计算
+    for i in range(xn):
+        for j in range(yn):
+            m = i*j
+            delta[i,j] = abs(pair_energy(m,m,eig_val,eig_vec))

@@ -1,100 +1,5 @@
-# 函数库导入
-from numpy import *
-import numpy as np # 矩阵
-import math # 数学函数
-import random # 随机数模块
-import os # 系统信息获取
-import seaborn as sns # 热图
-import matplotlib.pyplot as plt #作图
-# 变量定义
-xn=6
-yn=6
-N = xn*yn*4
-len2 = xn*yn
-len1 = xn
-xp = 1
-yp = 1
-ZeroPoint = xn*yn*2
-eps = 1e-5 # error
-# 参数定义
-h = 0.6 # h is external magnetic field
-V = 0 # Point potential
-t0 = 1 # hoppping strength
-lam = 0.5*t0 # spin-couple strength
-mu = -4 # chemical potential
-kb = 1 ## Boltzmann constant
-a = 1 # lattice constant 
-T = 1e-4 #Temperature
-#pi = 3.14159265359
-beta = 1/(kb*T)
-phi0 = pi
-B = 2*phi0/(xn*yn) #Zeeman Magnetic
-# 文件路径
-current_path = os.path.abspath(__file__) # 读取当前文件的位置
-father_path = os.path.abspath(os.path.dirname(current_path) + os.path.sep + ".") # 获取当前文件的父目录
-
-
-#数据存储
-f = open("param.txt","w")
-f.write(" T = ")
-f.write(repr(T)) #repr 将数值转换为字符串输出
-f.write(" eps = ")
-f.write(repr(eps))
-f.write(" h = ")
-f.write(repr(h))
-f.close()
-# 矩阵初始化
-ham = np.zeros((N,N),dtype=complex) # Hamilition matrix is complex number
-# 在python矩阵的索引从0开始，所以在对ham进行索引取值时，最大不超过N-1
-ham_diag = ham
-delta = np.zeros((xn,yn)) # order parameter
-# hopping过程中位相考虑
-def phi(y):
-    return exp(-1j*pi/phi0*B*y)
-# 超导配对能(自洽计算)
-def pair_energy(x,y,eig_val,eig_vec):
-    s = 0+0*1j
-    for m in range(N):
-        s = s + eig_vec[x,m]*conj(eig_vec[y+len2*2,m])*tanh(eig_val[m]/2*beta)
-    return 5.0/2.0*s
-# 杂质势
-def potential(x,y):
-    xy = (y-1)*xn + x
-#       Positive energy (正能位置的杂质拖动正能对应的态)
-    ham[xy,xy] = ham[xy,xy] + V # position at spin-up oriention   (1,1)block
-    ham[xy+len2,xy+len2] = ham[xy+len2,xy+len2] + V  # position at spin-down oriention   (2,2) block
-#   Negative energy (负能对应的杂质拖动负能对应的态)
-    ham[xy+len2*2,xy+len2*2] = ham[xy+len2*2,xy+len2*2] - V     # (3,3)block
-    ham[xy+len2*3,xy+len2*3] = ham[xy+len2*3,xy+len2*3] - V       #(4,4)block
-    return
-
-# 对角线元素填充(tested)
-def diagele():
-	for m in range(xn*yn):
-            ham[m,m] = h - mu
-            ham[len2+m,len2+m] = -h - mu
-            ham[len2*2+m,len2*2+m] = -(-h-mu)
-            ham[len2*3+m,len2*3+m] = -(h-mu)
-#Pariing energy(tested)
-def pair_Init(input,eig_val,eig_vec):
-    if input == 0:
-        # 最初用随机数对超导配对能进行赋值
-        s = random.random()
-        #s = 0.5
-        for m in range(xn*yn):
-            ham[len2*2+m,m] = s # C-up*C-down    (1,3)block
-            ham[m,len2*2+m] = s #  C-down*C-up    (3,1)block 
-            ham[len2+m,len2*3+m] = -s  # C-up*C-down   (2,4)block
-            ham[len2*3+m,len2+m] = -s  #  E-up*E-down    (4,2)block
-    elif input == 100:
-        pass
-    else:
-        for m in range(xn*yn):
-            ham[len2*2+m,m] = pair_energy(m,m,eig_val,eig_vec) # C-up*C-down    (1,3)block
-            ham[m,len2*2+m] = conj(pair_energy(m,m,eig_val,eig_vec)) #  C-down*C-up    (3,1)block 
-            ham[len2+m,len2*3+m] = -pair_energy(m,m,eig_val,eig_vec)  # C-up*C-down   (2,4)block
-            ham[len2*3+m,len2+m] = -conj(pair_energy(m,m,eig_val,eig_vec))  #  E-up*E-down    (4,2)block
-
+from param import *
+from subfunction import *
 #========================= hopping term (tested) ===================================================
 def hopping():
 #------------------------  x-direction right hopping -------------------
@@ -174,10 +79,40 @@ def hopping():
         ham[len2*3+m*xn,len2*3+(m+1)*xn-1] = t0*(phi(m+1))#第一列上的点向右跳跃(周期性边界条件决定它跳跃到最后一列)
         ham[len2*3+(m+1)*xn-1,len2*3+m*xn] = t0*conj(phi(m+1))#最后一列的点向右跳跃
         ham[len2*3+(m+1)*xn-1,len2*3+(m+1)*xn-2] = t0*(phi(m+1))#最后一列的点向左跳跃
-            #     spin-orbital couple energy  
-#XXXX                              - x direction copule (right and left couple) --------
-#----------------------------------positive energy couple (1,2)block----------------------
+
+
+# 对角线元素填充(tested)
+def diagele():
+	for m in range(xn*yn):
+            ham[m,m] = h - mu
+            ham[len2+m,len2+m] = -h - mu
+            ham[len2*2+m,len2*2+m] = -(-h-mu)
+            ham[len2*3+m,len2*3+m] = -(h-mu)
+
+
+#Pariing energy(tested)
+def pair_Init(input,eig_val,eig_vec):
+    if input == 0:
+        # 最初用随机数对超导配对能进行赋值
+        s = random.random()
+        #s = 0.5
+        for m in range(xn*yn):
+            ham[len2*2+m,m] = s # C-up*C-down    (1,3)block
+            ham[m,len2*2+m] = s #  C-down*C-up    (3,1)block 
+            ham[len2+m,len2*3+m] = -s  # C-up*C-down   (2,4)block
+            ham[len2*3+m,len2+m] = -s  #  E-up*E-down    (4,2)block
+    elif input == 100:
+        pass
+    else:
+        for m in range(xn*yn):
+            ham[len2*2+m,m] = pair_energy(m,m,eig_val,eig_vec) # C-up*C-down    (1,3)block
+            ham[m,len2*2+m] = conj(pair_energy(m,m,eig_val,eig_vec)) #  C-down*C-up    (3,1)block 
+            ham[len2+m,len2*3+m] = -pair_energy(m,m,eig_val,eig_vec)  # C-up*C-down   (2,4)block
+            ham[len2*3+m,len2+m] = -conj(pair_energy(m,m,eig_val,eig_vec))  #  E-up*E-down    (4,2)block
+#     spin-orbital couple energy  
 def couple():
+#XXXX   x direction copule (right and left couple) --------
+#----------------------------------positive energy couple (1,2)block----------------------
     for l in range(yn):
         for m in range(1+l*xn,xn*(l+1)-1):
             ham[m,len2+m+1] = 1j*lam*phi(l+1) # spin_up-spin_down couple right  正向耦合(1--->2)
@@ -257,28 +192,8 @@ def couple():
         ham[len2*3+m,len2*2+xn*(yn-1)+m] = lam*conj(phi((m+1)*yn))
         ham[len2*3+m+xn*(yn-1),len2*2+m] = -lam*(phi((m+1)*yn))
         ham[len2*3+m+xn*(yn-1),len2*2+m+xn*(yn-1)-len1] = lam
-#================== set value complete =========================
-def hermitian():
-    cc = 0
-    f = open(father_path+"\\"+"hermitian.dat","w")
-    for m in range(N):
-        for l in range(N):
-            if ham[m,l] != conj(ham[l,m]):
-                string = "("+str(m)+","+str(l)+")"+":"
-                f.write(string)
-                f.write(str(ham[m,l]))
-                f.write("\n")
-                cc += 1
-    f.close
-    print("non-hermitian number:%d"% cc) 
-def count():
-    cc = 0
-    for m in range(N):
-        for l in range(N):
-            if ham[m,l] != 0:
-                cc += 1
-    print("non-zero number:%d"% cc) 
-#============================================================
+
+#========================= 矩阵重构 =======================
 def matrix_construct(x,eig_val,eig_vec):
     if x == 0 :
         pass
@@ -288,70 +203,3 @@ def matrix_construct(x,eig_val,eig_vec):
     pair_Init(x,eig_val,eig_vec)
     hopping()
     couple()
-#==============================================================
-def delta_plot(x):
-    sns.set()
-    ax = sns.heatmap(x,fmt="d",cmap="cool",square=True,xticklabels=2,yticklabels=2)
-    ax.invert_yaxis() # y轴反序
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.xticks(rotation=0)    # 将字体进行旋转
-    #plt.show()
-    plt.pause(3)
-    plt.close()
-#==============================================
-def energy_plot(w):
-    # 本征值作图(python中需要先对本征值排序然后作图)
-    f = open(father_path+"\\"+"eigvalue.dat","w")
-    for m in range(len(w)):
-        a = sort(w)
-        temp = real(a[m])
-        f.write(str(temp))
-        f.write("\n")
-    nMin = round(len(a)/2-50)
-    nMax = round(len(a)/2+50)
-    plt.plot(real(a[nMin:nMax]),"r.")
-    plt.pause(3)
-    plt.close()
-#===============================================
-def del_cal(eig_val,eig_vec):
-    global delta
-    # 格点位置上序参量的计算
-    for i in range(xn):
-        for j in range(yn):
-            m = i*j
-            delta[i,j] = abs(pair_energy(m,m,eig_val,eig_vec))
-#======================== 自洽过程 ===============
-def self_consis():
-    global ham,w
-    w,ham_diag = np.linalg.eig(ham)
-    del_loop = np.zeros((xn,yn))
-    del_err = np.zeros((xn,yn))
-    del_cal(w,ham_diag)#计算出一组delta值
-    num = 0
-    ref = 3
-    while ref > 1:
-        f1 = open(father_path+"\\"+"count.dat","w")
-        f2 = open(father_path+"\\"+"check.dat","w")
-        ref = 0
-        for m in range(xn):
-            for l in range(yn):
-                del_err[m,l] = delta[m,l] - del_loop[m,l]
-                del_loop[m,l] = delta[m,l]
-                if abs(real(del_err[m,l])) > eps:
-                    ref += 1
-                if abs(imag(del_err[m,l])) > eps:
-                    ref += 1
-        f1.write(str(num))
-        f2.write(str(ref))
-        num += 1
-        matrix_construct(12,w,ham_diag)
-        w,ham_diag = np.linalg.eig(ham)
-        del_cal(w,ham_diag)
-        print(ref)
-#============= Start calculation ==============
-matrix_construct(0,0,0)
-# 自洽计算
-self_consis()
-# 可视化
-energy_plot(w)
