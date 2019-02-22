@@ -297,6 +297,7 @@ def delta_plot(x):
     plt.ylabel("y")
     plt.xticks(rotation=0)    # 将字体进行旋转
     #plt.show()
+    plt.savefig(father_path+"\\"+"order.png",dpi = 800)
     plt.pause(3)
     plt.close()
 #==============================================
@@ -311,6 +312,7 @@ def energy_plot(w):
     nMin = round(len(a)/2-50)
     nMax = round(len(a)/2+50)
     plt.plot(real(a[nMin:nMax]),"r.")
+    plt.savefig(father_path+"\\"+"energy.png",dpi = 800)
     plt.pause(3)
     plt.close()
 #===============================================

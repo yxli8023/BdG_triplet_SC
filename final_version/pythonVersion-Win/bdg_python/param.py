@@ -1,8 +1,8 @@
 from numpy import *
 import numpy as np # 矩阵
 # 变量定义
-xn=12
-yn=12
+xn=24
+yn=24
 N = xn*yn*4
 len2 = xn*yn
 len1 = xn
