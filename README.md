@@ -26,6 +26,10 @@
 >
 > final_version中同时有origin的绘图文件pic，用来比较清晰的展示计算结果
 
+> 如果你的电脑上并没有安装相应的软件，那么可以通过运行[DataRead.f90]这个文件，来获取最小的序参量所对应的位置，这样也可以看到零能的位置。
+
+> 在final_version文件夹中又新增加了一个文件夹NewVersion，里面的文件使用了一种新的思路来对矩阵进行赋值，该方法不是我的原创，是从别人的程序中学来的，不过程序的框架还是沿用了我的那一套。
+
 ![Image text](https://github.com/yxli8023/BdG/blob/master/Pictures/Mathematica_6N0HcvNprH.jpg)
 
 ![](https://github.com/yxli8023/BdG/blob/master/Pictures/Origin93_64_hWVZ1U68Dp.png)
