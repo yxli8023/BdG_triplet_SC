@@ -11,7 +11,6 @@
     real,parameter::pi = 3.14159265359
     real h ! h is external magnetic field
     real V ! V is point potential
-    real a ! Lettice constant
     real kb ! Boltzmann constant
     real T ! Temperature
     real t0 ! t0 is the couple strength of Hubbrd model
@@ -54,7 +53,6 @@
     allocate(iwork(3+5*N))
 !===============================Parameter Setting=======================
     phi0 = pi! flux quantum
-    a = 1.0 ! lattice constant
     h = 0.6 ! zeeman  field
     mu = -4  ! chemical potential
     V = 0    ! point potential
@@ -76,7 +74,88 @@
     call Majorana() 
     stop
     end
-!========================= PROGRAM END ==================================
+!=============================================================
+    subroutine delc()
+    use param
+    integer m,l,i
+    integer num     
+    complex,external::delta
+    open(12,file="op.dat")
+    do m = 1,xn
+        do l = 1,yn
+            i = (m-1)*yn+l
+            del(m,l)= delta(i,i,w,Ham_diag)
+            write(12,*)m,l,del(m,l)
+        end do
+    end do
+    close(12)
+    
+    open(14,file='opmodule.dat')
+    do m = 1,xn
+        do l = 1,yn
+            write(14,*)m,l,abs(del(m,l))**2
+        end do
+    end do
+    close(14)
+
+    return
+    end subroutine delc
+!===========================================================
+    subroutine loop()   
+    use param
+    integer num,ref
+    !store value of del and use for self-consistently
+    complex del_loop(xn,yn),del_err(xn,yn)
+    del_loop = 0
+    del_err = 0
+    call delc() ! 计算出一组delta
+    num = 0    
+    ref = 3                    
+    do while(ref .gt. 1)
+        open(24,file="count.dat")
+        open(25,file="check.dat")
+            ref = 0
+            do m=1,xn
+                do l=1,yn
+                    !del_err用来存储两次计算得到的delta的差值,用来进行自恰条件的比较
+                    del_err(m,l)=del(m,l)-del_loop(m,l)
+                    del_loop(m,l) = del(m,l)
+                    if (abs(real(del_err(m,l)))>eps) ref=ref+1
+                    if (abs(imag(del_err(m,l)))>eps) ref=ref+1
+                end do
+            end do
+            write(24,*)num
+            write(25,*)ref
+            num = num + 1
+            call matrix()  ! Reconstruction Matrix
+            call eig()
+            call delc() ! Get a new value for del use new w and Ham
+    end do
+    close(24)
+    close(25)
+    return
+    end subroutine loop
+!==========================================================
+    subroutine Majorana()
+    use param
+    complex z1(xn*yn),z2(xn*yn)
+    integer m,l,i
+    z1 = 0
+    z2 = 0
+    open(11,file="gamma1.dat")
+    open(12,file="gamma2.dat")
+    do m = 1,xn
+        do l = yn
+            i = (m-1)*xn + l
+            z1(i)=(Ham(ZeroPoint,i)+Ham(ZeroPoint+1,len2+i))/sqrt(2.0)
+            z2(i)=image*(Ham(ZeroPoint,i)-Ham(ZeroPoint+1,len2+i))/sqrt(2.0)  
+            write(11,*)m,l,abs(z1(i))
+            write(12,*)m,l.abs(z2(i)) 
+    end do 
+    close(11)
+    close(12)
+    return
+    end subroutine Majorana
 !========================  del Read ========================
 ! 在计算过程中，可能需要通过之前已经计算得到的delta来进行进一步的
 ! 的计算，该子过程可以将对应位置的delta赋值到矩阵中的对应位置
@@ -361,32 +440,6 @@
     end do
     return
     end subroutine diag
-!=============================================================
-    subroutine del_c()
-    use param
-    integer m,l,i
-    integer num     
-    complex,external::delta
-    open(12,file="order.dat")
-    do m = 1,xn
-        do l = 1,yn
-            i = (m-1)*yn+l
-            del(m,l)= delta(i,i,w,Ham_diag)
-            write(12,*)del(m,l)
-        end do
-    end do
-    close(12)
-    
-    open(14,file='order_module.dat')
-    do m = 1,xn
-        do l = 1,yn
-            write(14,*)abs(del(m,l))**2
-        end do
-    end do
-    close(14)
-
-    return
-    end subroutine del_c
 !============================================================      
     subroutine matrix()
     use param
@@ -399,41 +452,6 @@
     call pair_Init(1) 
     call potential(xp,yp)
     end subroutine matrix
-!===========================================================================
-    subroutine loop()   
-    use param
-    integer num,ref
-    !store value of del and use for self-consistently
-    complex del_loop(xn,yn),del_err(xn,yn)
-    del_loop = 0
-    del_err = 0
-    call del_c() ! 计算出一组delta
-    num = 0    
-    ref = 3                    
-    do while(ref .gt. 1)
-        open(24,file="count.dat")
-        open(25,file="check.dat")
-            ref = 0
-            do m=1,xn
-                do l=1,yn
-                    !del_err用来存储两次计算得到的delta的差值,用来进行自恰条件的比较
-                    del_err(m,l)=del(m,l)-del_loop(m,l)
-                    del_loop(m,l) = del(m,l)
-                    if (abs(real(del_err(m,l)))>eps) ref=ref+1
-                    if (abs(imag(del_err(m,l)))>eps) ref=ref+1
-                end do
-            end do
-            write(24,*)num
-            write(25,*)ref
-            num = num + 1
-            call matrix()  ! Reconstruction Matrix
-            call eig()
-            call del_c() ! Get a new value for del use new w and Ham
-    end do
-    close(24)
-    close(25)
-    return
-    end subroutine loop
 !===========================================================
     subroutine eig()
     use param
@@ -459,25 +477,6 @@
 	close(12)
     return
     end subroutine eig
-!==========================================================
-    subroutine Majorana()
-    use param
-    complex z1(xn*yn),z2(xn*yn)
-    integer m,l
-    z1 = 0
-    z2 = 0
-    open(11,file="gamma1.dat")
-    open(12,file="gamma2.dat")
-    do m = 1,xn*yn
-        z1(m)=(Ham(ZeroPoint,m)+Ham(ZeroPoint+1,len2+m))/sqrt(2.0)
-        z2(m)=image*(Ham(ZeroPoint,m)-Ham(ZeroPoint+1,len2+m))/sqrt(2.0)  
-        write(11,*)abs(z1(m))
-        write(12,*)abs(z2(m)) 
-    end do 
-    close(11)
-    close(12)
-    return
-    end subroutine Majorana
 !===========================================================
     subroutine matrix_verify()
     use param
