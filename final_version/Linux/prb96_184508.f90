@@ -3,8 +3,6 @@
 !      Article:Phys.Rev.B 96,184508
     module param
     implicit none 
-    ! include two spin and create and elimination operator so have 4
-    ! types
     integer xn,yn
     ! xn : Numbers of lattice points in x-direction
     ! yn : Numbers of lattice points in y-direction
@@ -75,17 +73,7 @@
     !call potential(xp,yp)
     call eig()
     call loop()
-    !call Majorana() 
-    
-!--------------------------- open file------------------------
-    open(11,file='eigenvalue.dat')
-    do m = 1,N
-        write(11,*)w(m) ! eigenvalue
-    end do
-!------------------------- close file ------------------------
-    close(11)
-!--------------  IO format control ---------------------------
-100   format(48(f9.6)) !8位宽度输出数据,小数部分6位      
+    call Majorana() 
     stop
     end
 !========================= PROGRAM END ==================================
@@ -127,18 +115,12 @@
     delta = 5.0/2.0*s
     end function delta
 !-------------------------- point potential -----------------
-!------------------------ point potential element setting complete-----------
-! add a point potential at xy
-! 对于矩形的点阵模型，假设x方向格点数为xn,y方向格点数为yn
-! 在(a,b)点增加point potential时,xy=(a-1)*xn+b
     subroutine potential(x,y)
     use param
     integer xy,x,y
     xy = (y-1)*xn+x
-!     Positive energy (正能位置的杂质拖动正能对应的态)
     Ham(xy,xy)=Ham(xy,xy)+V ! position at spin-up oriention   (1,1)block
     Ham(xy+len2,xy+len2)=Ham(xy+len2,xy+len2)+V ! position at spin-down oriention   (2,2) block
-!     Negative energy (负能对应的杂质拖动负能对应的态)
     Ham(xy+len2*2,xy+len2*2)=Ham(xy+len2*2,xy+len2*2)-V    ! (3,3)block
     Ham(xy+len2*3,xy+len2*3)=Ham(xy+len2*3,xy+len2*3)-V       !(4,4)block
     return
@@ -199,7 +181,6 @@
         ! (2,2)block   spin-down
             Ham(len2+m,len2+m+1) = -t0*phi(l)
             Ham(len2+m,len2+m-1) = -t0*conjg(phi(l))
-
     !     --------------------------negative energy ------------------------
         ! (3,3) block
             Ham(len2*2+m,len2*2+m+1) = t0*conjg(phi(l))
@@ -311,7 +292,6 @@
         Ham(len2*3+m,len2*2+m+len1) = -lambda
         Ham(len2*3+m,len2*2+m-len1) = lambda
     end do
-
 ! ------------------------ right and left boundary---------------------------------
 !------------------------ positive energy ---------------------------------------
     do m = 1,yn   !  (1,2)block
@@ -326,7 +306,6 @@
         Ham(len2+m*xn,m*xn-1) = -image*lambda*conjg(phi(m)) ! 增加一层会使自旋取向改变一次(1------>48)
         Ham(len2+m*xn-(xn-1),m*xn-(xn-1)+1) = image*lambda*phi(m)
         Ham(len2+m*xn-(xn-1),m*xn) = -image*lambda*conjg(phi(m))
-        
 !---------------------------------------negative energy---------------------------------
     !  (3,4)block
         Ham(len2*2+m*xn,len2*3+m*xn-(xn-1)) = image*lambda*conjg(phi(m))
@@ -339,7 +318,6 @@
         Ham(len2*3+m*xn-(xn-1),len2*2+m*xn-(xn-1)+1) = image*lambda*conjg(phi(m))
         Ham(len2*3+m*xn-(xn-1),len2*2+m*xn) = -image*lambda*(phi(m))
     end do           
-
 !----------------------- up and down boundary -------------------------------
 ! 
     do m = 1,xn       ! (1,2)block
@@ -352,8 +330,7 @@
         Ham(len2+m,xn*(yn-1)+m) = lambda*(phi(m*yn))  ! down
         Ham(len2+m+xn*(yn-1),m) = -lambda*conjg(phi(m*yn))
         Ham(len2+m+xn*(yn-1),m+xn*(yn-1)-len1) = lambda
-
-! ------------------------------------ negative energy ----------------------------
+! ----------------------------------- negative energy ----------------------------
     ! (3,4)block
         Ham(len2*2+m,len2*3+m+len1) = lambda
         Ham(len2*2+m,len2*3+xn*(yn-1)+m) = -lambda*conjg(phi(m*yn))
@@ -385,23 +362,11 @@
     return
     end subroutine diag
 !=============================================================
-    subroutine del_c(num)
+    subroutine del_c()
     use param
     integer m,l,i
     integer num     
     complex,external::delta
-    character*20::str1,str2,str3,str4
-    character*20::str5,str6
-    character*20::str7,str8
-    str1 = "order_module"
-    str5 = "order"
-    str7 = "energy_rf"
-    write(str2,"(I4.4)")num ! Change type of 'num' to character from integer
-    str3 = ".dat"
-    str4 = trim(str1)//trim(str2)//trim(str3)
-    str6 = trim(str5)//trim(str2)//trim(str3)
-    str8 = trim(str7)//trim(str2)//trim(str3)
-    !open(12,file=str6)! 12 文件用来输出delta,需要另外的文件来输出delta的模
     open(12,file="order.dat")
     do m = 1,xn
         do l = 1,yn
@@ -411,23 +376,15 @@
         end do
     end do
     close(12)
-    !Every 10 times write a file about abs(delta)
-    if (mod(num,1) .eq. 0)then
-        !open(14,file=str4)
-        open(14,file='order_module.dat')
-        do m = 1,xn
-            do l = 1,yn
-                write(14,*)abs(del(m,l))
-            end do
+    
+    open(14,file='order_module.dat')
+    do m = 1,xn
+        do l = 1,yn
+            write(14,*)abs(del(m,l))**2
         end do
-        close(14)
-        !open(13,file=str8)
-        open(13,file="energy.dat")
-        do m = 1,N
-            write(13,*)w(m) ! eigenvalue
-        end do
-        close(13)
-    end if 
+    end do
+    close(14)
+
     return
     end subroutine del_c
 !============================================================      
@@ -450,33 +407,28 @@
     complex del_loop(xn,yn),del_err(xn,yn)
     del_loop = 0
     del_err = 0
-    call del_c(0) ! 计算出一组delta
+    call del_c() ! 计算出一组delta
     num = 0    
     ref = 3                    
     do while(ref .gt. 1)
-    open(24,file="count.dat")
-    open(25,file="check.dat")
-        ref = 0
-    do while(minval(abs(del_err))>eps)
-        do m=1,xn
-            do l=1,yn
-                !del_err用来存储两次计算得到的delta的差值,用来进行自恰条件的比较
-                del_err(m,l)=del(m,l)-del_loop(m,l)
-                del_loop(m,l) = del(m,l)
-                if (abs(real(del_err(m,l)))>eps) ref=ref+1
-                if (abs(imag(del_err(m,l)))>eps) ref=ref+1
+        open(24,file="count.dat")
+        open(25,file="check.dat")
+            ref = 0
+            do m=1,xn
+                do l=1,yn
+                    !del_err用来存储两次计算得到的delta的差值,用来进行自恰条件的比较
+                    del_err(m,l)=del(m,l)-del_loop(m,l)
+                    del_loop(m,l) = del(m,l)
+                    if (abs(real(del_err(m,l)))>eps) ref=ref+1
+                    if (abs(imag(del_err(m,l)))>eps) ref=ref+1
+                end do
             end do
-        end do
-        close(22)
-        close(23)
-        close(26)
-        write(24,*)num
-        write(25,*)ref
-        num = num + 1
-        call matrix()  ! Reconstruction Matrix
-        call eig()
-        call del_c(num) ! Get a new value for del use new w and Ham
-    end do
+            write(24,*)num
+            write(25,*)ref
+            num = num + 1
+            call matrix()  ! Reconstruction Matrix
+            call eig()
+            call del_c() ! Get a new value for del use new w and Ham
     end do
     close(24)
     close(25)
