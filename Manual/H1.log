@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.7.15)  17 MAR 2020 23:24
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/W32TeX) (preloaded format=xelatex 2019.7.15)  18 MAR 2020 23:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -854,33 +854,17 @@ LaTeX Info: Redefining \nameref on input line 15.
 ]
 LaTeX Font Info:    Font shape `TU/SimSun(0)/m/sl' in size <12> not available
 (Font)              Font shape `TU/SimSun(0)/m/it' tried instead on input line 
-67.
- [2] [3]
+77.
+ [2]
 File: pictures/SqLattice.png Graphic file (type bmp)
 <pictures/SqLattice.png>
- [4]
-File: pictures/lattice.png Graphic file (type bmp)
-<pictures/lattice.png>
-
-Overfull \hbox (32.80695pt too wide) in paragraph at lines 93--101
-\TU/lmr/m/n/12 (2,2)block: ham(xn*yn+m,xn*yn+m+1) ham(xn*yn+m,xn*yn+m-1) ham(xn
-*yn+m,xn*yn+m+xn)
- []
-
-
-Overfull \hbox (79.01115pt too wide) in paragraph at lines 102--103
-[]\TU/lmr/m/n/12 (3,1)block: ham(m,xn*yn*2+m+1) ham(m,xn*yn*2+m-1) ham(m,xn*yn*
-2+m+xn) ham(m,xn*yn*2+m-
- []
-
-[5]
+ [3]
 File: pictures/periodic.png Graphic file (type bmp)
 <pictures/periodic.png>
-
-Overfull \hbox (53.03427pt too wide) in paragraph at lines 107--108
- [][] 
- []
-
+ [4]
+File: pictures/cycle.png Graphic file (type bmp)
+<pictures/cycle.png>
+ [5]
 File: file/prb.pdf Graphic file (type pdf)
 <use file/prb.pdf>
 File: file/prb.pdf Graphic file (type pdf)
@@ -889,37 +873,29 @@ File: file/prb.pdf Graphic file (type pdf)
 <use file/prb.pdf, page 2>
 File: file/prb.pdf Graphic file (type pdf)
 <use file/prb.pdf, page 2>
-[6]
 File: file/prb.pdf Graphic file (type pdf)
 <use file/prb.pdf, page 2>
 File: file/prb.pdf Graphic file (type pdf)
 <use file/prb.pdf, page 2>
 File: file/prb.pdf Graphic file (type pdf)
 <use file/prb.pdf, page 2>
- [7]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 121.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 121.
+ [6]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 130.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 130.
  (./H1.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 121.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 121.
-
-
-Package rerunfilecheck Warning: File `H1.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `H1.out':
-(rerunfilecheck)             Before: 90E38CCB6F9EE994E079CAB7049262F2
-(rerunfilecheck)             After:  2D079C2BB9ADF89E80B237A4FD54F836.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 121.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 130.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 130.
+Package rerunfilecheck Info: File `H1.out' has not changed.
+(rerunfilecheck)             Checksum: 71C5CE5BE9B97E331419D92336A79A4D.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 130.
  ) 
 Here is how much of TeX's memory you used:
- 25308 strings out of 492922
- 509065 string characters out of 6138841
- 591266 words of memory out of 5000000
- 29114 multiletter control sequences out of 15000+600000
+ 25311 strings out of 492922
+ 509076 string characters out of 6138841
+ 593248 words of memory out of 5000000
+ 29117 multiletter control sequences out of 15000+600000
  537794 words of font info for 70 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 54i,18n,68p,846b,483s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 54i,18n,68p,916b,483s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on H1.pdf (7 pages).
+Output written on H1.pdf (6 pages).
