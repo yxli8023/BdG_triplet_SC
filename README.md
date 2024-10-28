@@ -194,3 +194,5 @@
 > email:  yxli406@gmail.com
 
 **文件夹Manual中是关于如何构建文章中的哈密顿量的详细介绍**
+
+**目前是有Fortran的代码经过了认真的测试，Julia和Python版本的代码请谨慎使用**
