@@ -1,0 +1,32 @@
+#PBS -l nodes=1:ppn=1
+#PBS -N test    # jobname
+#PBS -q qf        # queue name
+#PBS -j oe 
+
+# run the job
+cd $PBS_O_WORKDIR
+NP=`cat $PBS_NODEFILE | wc -l`
+
+echo "======== Job starts at `date +'%Y-%m-%d %T'` on `hostname` ======== "
+# Capture start time
+start_time=$(date +%s)
+
+mpiifort -mkl prb-96-184508.f90 -o ds
+mpirun -np $NP ./ds
+rm ds code*
+
+# Capture end time
+end_time=$(date +%s)
+
+# Calculate elapsed time
+elapsed_time=$(($end_time - $start_time))
+
+# Convert seconds to hours, minutes, and seconds
+hours=$(($elapsed_time / 3600))
+minutes=$((($elapsed_time % 3600) / 60))
+seconds=$(($elapsed_time % 60))
+
+echo "Total runtime: ${hours}h ${minutes}m ${seconds}s"
+
+
+echo "======== Job ends   at `date +'%Y-%m-%d %T'` on `hostname` ======== "
